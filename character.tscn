@@ -1,0 +1,58 @@
+[gd_scene load_steps=10 format=3 uid="uid://dfpk0ovptbsvh"]
+
+[ext_resource type="Texture2D" uid="uid://4fjmn6j3jp0m" path="res://Assets/Character.png" id="2_pjt0s"]
+[ext_resource type="Script" uid="uid://cj2yd7mglo18b" path="res://character_rigid.gd" id="2_wa5vi"]
+[ext_resource type="Texture2D" uid="uid://mxoinhh2yotg" path="res://Assets/character_cross.png" id="2_wfnr8"]
+[ext_resource type="Script" uid="uid://dqkbhv1er2lu0" path="res://player_area_sensor.gd" id="3_wa5vi"]
+[ext_resource type="Script" uid="uid://br1ohkda0jbb8" path="res://counter_rotate.gd" id="4_0qfo5"]
+[ext_resource type="Script" uid="uid://cto4j0wua4je4" path="res://character_satellite.gd" id="4_px5sl"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_glpr6"]
+radius = 84.701
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wfnr8"]
+radius = 55.0364
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_px5sl"]
+radius = 13.0
+
+[node name="character" type="Node2D"]
+
+[node name="character_rb" type="RigidBody2D" parent="."]
+script = ExtResource("2_wa5vi")
+
+[node name="character_col_shape" type="CollisionShape2D" parent="character_rb"]
+position = Vector2(-1, 0)
+scale = Vector2(0.649772, 0.649772)
+shape = SubResource("CircleShape2D_glpr6")
+
+[node name="character_sprite" type="Sprite2D" parent="character_rb"]
+position = Vector2(-1, 0)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_wfnr8")
+
+[node name="area_sensor" type="Area2D" parent="character_rb"]
+script = ExtResource("3_wa5vi")
+
+[node name="areaSensor_col_shape" type="CollisionShape2D" parent="character_rb/area_sensor"]
+position = Vector2(-1, 0)
+shape = SubResource("CircleShape2D_wfnr8")
+
+[node name="Camera2D" type="Camera2D" parent="character_rb"]
+zoom = Vector2(0.5, 0.5)
+position_smoothing_enabled = true
+
+[node name="counter_rotate" type="Node2D" parent="character_rb"]
+script = ExtResource("4_0qfo5")
+
+[node name="Area2D" type="Area2D" parent="character_rb/counter_rotate"]
+script = ExtResource("4_px5sl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="character_rb/counter_rotate/Area2D"]
+position = Vector2(75, 0)
+shape = SubResource("CircleShape2D_px5sl")
+
+[node name="Sprite2D" type="Sprite2D" parent="character_rb/counter_rotate/Area2D"]
+position = Vector2(75, 0)
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("2_pjt0s")

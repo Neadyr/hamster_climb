@@ -1,0 +1,27 @@
+ea4bc82a6ad023ab7ee23ee620429895
+::res://::1755378574
+basic_floor.png::CompressedTexture2D/CompressedTexture2D::5817276486978023156::1755077890::1755378548::1::::<><><>0<>0<>708c82ea26adc8819c2729a35cdfd7c7<>res://.godot/imported/basic_floor.png-e59bdced4f8f26e7dd45145ecd9ebe98.ctex::
+character.gd::GDScript/GDScript::619081223525498379::1754925213::0::1::::<>CharacterBody2D<><>0<>0<><>::
+character.tscn::PackedScene/PackedScene::7541824518830426097::1755378027::0::1::::<><><>0<>0<><>::uid://4fjmn6j3jp0m::::res://Assets/Character.png<>uid://cj2yd7mglo18b::::res://character_rigid.gd<>uid://mxoinhh2yotg::::res://Assets/character_cross.png<>uid://dqkbhv1er2lu0::::res://player_area_sensor.gd<>uid://br1ohkda0jbb8::::res://counter_rotate.gd<>uid://cto4j0wua4je4::::res://character_satellite.gd
+characterbackup.gd::GDScript/GDScript::5058665736188225587::1754862189::0::1::::<>CharacterBody2D<><>0<>0<><>::
+character_rigid.gd::GDScript/GDScript::5461743424268968619::1755376076::0::1::::<>RigidBody2D<><>0<>0<><>::
+character_satellite.gd::GDScript/GDScript::6137108897980335409::1755378027::0::1::::<>Area2D<><>0<>0<><>::
+counter_rotate.gd::GDScript/GDScript::3634167915502948575::1755265975::0::1::::<>Node2D<><>0<>0<><>::
+icon.svg::CompressedTexture2D/CompressedTexture2D::8037663941703479274::1753013180::1755378548::1::::<><><>0<>0<>3a659b964155fa3814e9732b068691de<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
+main.tscn::PackedScene::1043485233114401579::1755378552::0::1::::<><><>0<>0<><>::uid://dfpk0ovptbsvh::::res://character.tscn<>uid://qte3gvvdl13r::::res://phys_mat/bounce.tres<>uid://fjw6ayidghr5::::res://Assets/Environment/black_hole.png<>uid://co46xuceniseu::::res://basic_floor.png<>uid://bh4kxd57b8lbj::::res://Assets/Environment/Boulders/Boulder_02.png<>uid://b23byjww3r5k5::::res://Assets/Environment/Boulders/Boulder_03.png<>uid://dli2nbtxgrgb8::::res://Assets/Environment/Boulders/Boulder_01.png<>uid://chuttwqhuqpfw::::res://Assets/Environment/Trees/Tree_01.png<>uid://bxur1qt1tbn06::::res://Assets/Environment/ice_slab.png
+player_area_sensor.gd::GDScript/GDScript::8303001687739321685::1755087202::0::1::::<>Area2D<><>0<>0<><>::
+Screenshot 2025-08-13 at 11.40.31.png::CompressedTexture2D/CompressedTexture2D::6317675574674027007::1755078035::1755378548::1::::<><><>0<>0<>a9c7d6c37e668c83ac59699e3b06bfc9<>res://.godot/imported/Screenshot 2025-08-13 at 11.40.31.png-14f2f23823b91aa2106f06315a876e87.ctex::
+::res://Assets/::1755378548
+Character.png::CompressedTexture2D/CompressedTexture2D::2046366967874191874::1754857503::1755378548::1::::<><><>0<>0<>b6930cc9379ed60b99d6f4d0642d190d<>res://.godot/imported/Character.png-f98bfd4a519deb39a93cee80b0823610.ctex::
+character_cross.png::CompressedTexture2D/CompressedTexture2D::890611830222005076::1755250990::1755378548::1::::<><><>0<>0<>e7d04fd7f1b438e63822e98a3e56529d<>res://.godot/imported/character_cross.png-7e5538c4112a57ca8deee18eb415595c.ctex::
+::res://Assets/Environment/::1755378549
+black_hole.png::CompressedTexture2D/CompressedTexture2D::370914788871656796::1755178213::1755378549::1::::<><><>0<>0<>d57d4a890e25271c5f2332927575cd01<>res://.godot/imported/black_hole.png-c73a0eec0849719ba33f45c545825ce7.ctex::
+ice_slab.png::CompressedTexture2D/CompressedTexture2D::4043131132899251421::1755179214::1755378549::1::::<><><>0<>0<>40b42649795b83980f861e13f37278a2<>res://.godot/imported/ice_slab.png-f482625b4dbe9c75b8184065207d73b6.ctex::
+::res://Assets/Environment/Boulders/::1755378549
+Boulder_01.png::CompressedTexture2D/CompressedTexture2D::7949517010183937763::1755153560::1755378549::1::::<><><>0<>0<>d0dc5de8c2383091606f30f3638f14c6<>res://.godot/imported/Boulder_01.png-c4a7e4e8a0006b82566ae3de2d666a52.ctex::
+Boulder_02.png::CompressedTexture2D/CompressedTexture2D::2938257992585301103::1755154566::1755378549::1::::<><><>0<>0<>0c5aa515e61b4f5cce364af82a5c81d8<>res://.godot/imported/Boulder_02.png-ca97bfd98b42e4756bd845f0681b83b9.ctex::
+Boulder_03.png::CompressedTexture2D/CompressedTexture2D::4339426122813681522::1755154566::1755378549::1::::<><><>0<>0<>35e597d247a875001cbc8af704c1f84a<>res://.godot/imported/Boulder_03.png-0a87d2e8546bea320ed77751f1429da4.ctex::
+::res://Assets/Environment/Trees/::1755378549
+Tree_01.png::CompressedTexture2D/CompressedTexture2D::5306639561456375068::1755155552::1755378549::1::::<><><>0<>0<>727daee097823e1448ac01f40a0c2c3b<>res://.godot/imported/Tree_01.png-2d80c472018f2ba59c1402d5c1b21c44.ctex::
+::res://phys_mat/::1755067732
+bounce.tres::PhysicsMaterial/PhysicsMaterial::1162537894275666713::1755067732::0::1::::<><><>0<>0<><>::

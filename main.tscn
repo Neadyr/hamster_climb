@@ -1,0 +1,227 @@
+[gd_scene load_steps=18 format=3 uid="uid://o4qbxbbgsx84"]
+
+[ext_resource type="PackedScene" uid="uid://dfpk0ovptbsvh" path="res://character.tscn" id="1_ig7tw"]
+[ext_resource type="PhysicsMaterial" uid="uid://qte3gvvdl13r" path="res://phys_mat/bounce.tres" id="2_h2yge"]
+[ext_resource type="Texture2D" uid="uid://fjw6ayidghr5" path="res://Assets/Environment/black_hole.png" id="3_5vw27"]
+[ext_resource type="Texture2D" uid="uid://co46xuceniseu" path="res://basic_floor.png" id="4_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://bh4kxd57b8lbj" path="res://Assets/Environment/Boulders/Boulder_02.png" id="5_7mycd"]
+[ext_resource type="Texture2D" uid="uid://b23byjww3r5k5" path="res://Assets/Environment/Boulders/Boulder_03.png" id="5_272bh"]
+[ext_resource type="Texture2D" uid="uid://dli2nbtxgrgb8" path="res://Assets/Environment/Boulders/Boulder_01.png" id="5_lquwl"]
+[ext_resource type="Texture2D" uid="uid://chuttwqhuqpfw" path="res://Assets/Environment/Trees/Tree_01.png" id="8_5vw27"]
+[ext_resource type="Texture2D" uid="uid://bxur1qt1tbn06" path="res://Assets/Environment/ice_slab.png" id="8_kek77"]
+
+[sub_resource type="GDScript" id="GDScript_7dm0k"]
+script/source = "extends Node2D
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ig7tw"]
+size = Vector2(0.999992, 1)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_ig7tw"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_h2yge"]
+radius = 2478.2
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1bvp3"]
+radius = 1696.92
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_4c57u"]
+friction = 0.1
+bounce = 0.3
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lquwl"]
+texture = ExtResource("4_1bvp3")
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+1:0/0 = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+0:1/0 = 0
+0:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+1:1/0 = 0
+1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+
+[sub_resource type="TileSet" id="TileSet_7mycd"]
+physics_layer_0/collision_layer = 1
+physics_layer_0/physics_material = ExtResource("2_h2yge")
+sources/0 = SubResource("TileSetAtlasSource_lquwl")
+
+[node name="Main" type="Node2D"]
+script = SubResource("GDScript_7dm0k")
+
+[node name="character" parent="." instance=ExtResource("1_ig7tw")]
+position = Vector2(5, 0)
+
+[node name="Wall" type="StaticBody2D" parent="." groups=["wall"]]
+position = Vector2(2783, -1382)
+scale = Vector2(30, 1200)
+physics_material_override = ExtResource("2_h2yge")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Wall"]
+visible = false
+position = Vector2(-6.10352e-05, 0)
+shape = SubResource("RectangleShape2D_ig7tw")
+
+[node name="Sprite2D" type="Sprite2D" parent="Wall"]
+texture = SubResource("CanvasTexture_ig7tw")
+
+[node name="Wall2" type="StaticBody2D" parent="." groups=["wall"]]
+position = Vector2(6, 1242)
+scale = Vector2(30, 1200)
+physics_material_override = ExtResource("2_h2yge")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Wall2"]
+position = Vector2(-6.10352e-05, 0)
+shape = SubResource("RectangleShape2D_ig7tw")
+
+[node name="Sprite2D" type="Sprite2D" parent="Wall2"]
+texture = SubResource("CanvasTexture_ig7tw")
+
+[node name="Ground" type="StaticBody2D" parent="." groups=["ground"]]
+position = Vector2(4917, -1030)
+scale = Vector2(2000, 30)
+physics_material_override = ExtResource("2_h2yge")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
+position = Vector2(-6.10352e-05, 0)
+shape = SubResource("RectangleShape2D_ig7tw")
+
+[node name="Sprite2D" type="Sprite2D" parent="Ground"]
+texture = SubResource("CanvasTexture_ig7tw")
+
+[node name="Ground3" type="StaticBody2D" parent="." groups=["ground"]]
+position = Vector2(429, 131)
+scale = Vector2(2000, 30)
+physics_material_override = ExtResource("2_h2yge")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground3"]
+position = Vector2(-6.10352e-05, 0)
+shape = SubResource("RectangleShape2D_ig7tw")
+
+[node name="Sprite2D" type="Sprite2D" parent="Ground3"]
+texture = SubResource("CanvasTexture_ig7tw")
+
+[node name="Ground2" type="StaticBody2D" parent="." groups=["ground"]]
+position = Vector2(2924, 142)
+scale = Vector2(2000, 30)
+physics_material_override = ExtResource("2_h2yge")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground2"]
+position = Vector2(-6.10352e-05, 3.8147e-06)
+shape = SubResource("RectangleShape2D_ig7tw")
+
+[node name="Sprite2D" type="Sprite2D" parent="Ground2"]
+texture = SubResource("CanvasTexture_ig7tw")
+
+[node name="Ground4" type="StaticBody2D" parent="." groups=["ground"]]
+position = Vector2(2491, -864)
+rotation = -0.785398
+scale = Vector2(2000, 30)
+physics_material_override = ExtResource("2_h2yge")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground4"]
+position = Vector2(-6.10352e-05, 0)
+shape = SubResource("RectangleShape2D_ig7tw")
+
+[node name="Sprite2D" type="Sprite2D" parent="Ground4"]
+texture = SubResource("CanvasTexture_ig7tw")
+
+[node name="black_hole" type="Area2D" parent="." groups=["black_hole"]]
+position = Vector2(1612, -1160)
+scale = Vector2(0.32, 0.32)
+gravity_space_override = 3
+gravity_point = true
+gravity_point_unit_distance = 300.0
+gravity_point_center = Vector2(0, 0)
+gravity_direction = Vector2(0, 0)
+gravity = 3000.0
+linear_damp_space_override = 1
+linear_damp = 0.2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="black_hole"]
+shape = SubResource("CircleShape2D_h2yge")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="black_hole"]
+
+[node name="Sprite2D" type="Sprite2D" parent="black_hole/StaticBody2D"]
+scale = Vector2(4.625, 4.625)
+texture = ExtResource("3_5vw27")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="black_hole/StaticBody2D"]
+position = Vector2(-12.5, -43.75)
+shape = SubResource("CircleShape2D_1bvp3")
+
+[node name="Bloulder_03" type="StaticBody2D" parent="." groups=["ground"]]
+position = Vector2(4816, -422)
+physics_material_override = ExtResource("2_h2yge")
+
+[node name="Boulder_03" type="Sprite2D" parent="Bloulder_03"]
+texture = ExtResource("5_272bh")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Bloulder_03"]
+position = Vector2(-230, -200)
+build_mode = 1
+polygon = PackedVector2Array(-36, -5, -27, -11, 55, -36, 125, -54, 135, -55, 144, -53, 171, -36, 199, -15, 224, 6, 238, 20, 243, 26, 269, 68, 296, 118, 318, 162, 353, 142, 371, 134, 381, 130, 392, 130, 405, 134, 435, 145, 473, 162, 493, 172, 509, 182, 515, 187, 522, 195, 537, 216, 562, 257, 582, 297, 585, 306, 584, 319, 581, 337, 562, 408, 513, 461, 237, 435, -83, 440, -122, 346, -134, 317, -147, 261, -154, 231, -155, 211, -153, 193, -142, 166, -122, 131, -88, 69, -43, 2)
+
+[node name="Bloulder_02" type="StaticBody2D" parent="." groups=["ground"]]
+position = Vector2(4370, -192)
+physics_material_override = ExtResource("2_h2yge")
+
+[node name="Boulder_02" type="Sprite2D" parent="Bloulder_02"]
+texture = ExtResource("5_7mycd")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Bloulder_02"]
+position = Vector2(-230, -200)
+build_mode = 1
+polygon = PackedVector2Array(37, -46, 53, -66, 152, -110, 163, -111, 217, -100, 324, -76, 355, -66, 374, -54, 388, -39, 475, 90, 488, 113, 499, 148, 545, 312, 547, 326, 544, 340, 489, 520, -61, 502, -110, 326, -127, 253, -130, 239, -130, 225, -126, 209, -110, 164, -103, 149, -92, 131, -38, 57)
+
+[node name="Bloulder_04" type="StaticBody2D" parent="." groups=["ground"]]
+position = Vector2(6648, -325)
+physics_material_override = ExtResource("2_h2yge")
+
+[node name="Boulder_02" type="Sprite2D" parent="Bloulder_04"]
+texture = ExtResource("5_7mycd")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Bloulder_04"]
+position = Vector2(-230, -200)
+build_mode = 1
+polygon = PackedVector2Array(37, -46, 53, -66, 152, -110, 163, -111, 217, -100, 324, -76, 355, -66, 374, -54, 388, -39, 475, 90, 488, 113, 499, 148, 545, 312, 547, 326, 544, 340, 489, 520, -61, 502, -110, 326, -127, 253, -130, 239, -130, 225, -126, 209, -110, 164, -103, 149, -92, 131, -38, 57)
+
+[node name="Bloulder_01" type="StaticBody2D" parent="." groups=["ground"]]
+position = Vector2(4010, 149)
+physics_material_override = ExtResource("2_h2yge")
+
+[node name="Boulder_01" type="Sprite2D" parent="Bloulder_01"]
+texture = ExtResource("5_lquwl")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Bloulder_01"]
+position = Vector2(-230, -200)
+build_mode = 1
+polygon = PackedVector2Array(2, 1, 67, -31, 130, -60, 172, -63, 222, -59, 305, -41, 397, -16, 413, -3, 427, 11, 463, 63, 508, 139, 538, 202, 575, 304, 538, 444, 402, 490, -56, 489, -119, 381, -143, 334, -136, 266, -122, 187, -79, 130, -34, 59)
+
+[node name="ice_slab_01" type="StaticBody2D" parent="." groups=["ground", "ice"]]
+position = Vector2(3180, 152)
+physics_material_override = SubResource("PhysicsMaterial_4c57u")
+
+[node name="ice_slab_01" type="Sprite2D" parent="ice_slab_01"]
+texture = ExtResource("8_kek77")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="ice_slab_01"]
+position = Vector2(-230, -201)
+build_mode = 1
+polygon = PackedVector2Array(656, 90, 666, 90, 674, 98, 678, 109, 678, 149, 675, 193, 673, 207, 644, 278, 638, 290, 631, 297, 620, 301, 608, 302, 600, 306, 569, 327, 555, 338, 547, 343, 538, 347, 64, 347, 55, 345, 45, 339, 31, 329, 20, 324, 8, 324, -7, 333, -36, 352, -46, 355, -55, 355, -67, 350, -101, 337, -121, 322, -132, 315, -140, 310, -151, 308, -165, 305, -171, 302, -177, 293, -194, 253, -211, 213, -215, 199, -218, 170, -218, 109, -216, 101, -212, 95, -207, 92, -201, 90)
+
+[node name="Tree_01" type="StaticBody2D" parent="." groups=["ground"]]
+position = Vector2(5790, -135)
+rotation = 1.5451
+physics_material_override = ExtResource("2_h2yge")
+
+[node name="Tree_01" type="Sprite2D" parent="Tree_01"]
+texture = ExtResource("8_5vw27")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Tree_01"]
+position = Vector2(-230, -200)
+build_mode = 1
+polygon = PackedVector2Array(-123, 110, -106, 102, -89, 97, -72, 97, 178, 110, 316, 115, 391, 118, 402, 118, 410, 117, 422, 113, 456, 100, 531, 66, 499, 123, 566, 117, 507, 175, 612, 179, 536, 233, 583, 254, 515, 299, 536, 308, 573, 326, 602, 343, 569, 346, 598, 368, 617, 383, 580, 378, 499, 372, 401, 372, 268, 376, -57, 386, -86, 386, -105, 383, -127, 373, -143, 360, -158, 342, -168, 321, -176, 291, -178.767, 263.519, -179.073, 236.501, -175.226, 203.589, -169, 179, -158, 153, -142, 127)
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." groups=["ground"]]
+tile_set = SubResource("TileSet_7mycd")
