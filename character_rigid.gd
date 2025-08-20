@@ -9,14 +9,18 @@ var IS_IN_AIR = false
 var IS_ON_ICE = false
 var TORQUE_POWER = 50000
 var ACCELERATION = 2
-
+var platform = preload("res://summoned_platform.tscn")
+var ghost_platform = preload("res://ghost_platform.tscn")
+var current_platform
+var LAST_PLATFORM_ANGLE
 @onready var sat = $"./counter_rotate/character_satelite"
+@onready var sat_pos_getter = $"./counter_rotate/character_satelite/satelite_sprite"
 
 func _ready():
 	contact_monitor = true
 	max_contacts_reported = 4
 	connect("body_entered", Callable(self, "_on_body_entered"))
-	connect("body_exit", Callable(self, "_on_body_exit"))
+	connect("body_exited", Callable(self, "_on_body_exited"))
 
 func _input(event):
 	if event is InputEventKey:
@@ -24,17 +28,20 @@ func _input(event):
 	elif event is InputEventJoypadMotion or event is InputEventJoypadButton:
 		LAST_INPUT = "joypad"
 		
-func _process(delta):
+func _process(_delta):
 	if Input.is_action_just_pressed("reset"):
-		self.global_position = Vector2(0, 0)
-		angular_velocity = 0
-		linear_velocity = Vector2(0,0)
-		
+		#self.global_position = Vector2(0, 0)
+		#angular_velocity = 0
+		#linear_velocity = Vector2(0,0)
+		restart()
 func _physics_process(delta):
+	var sat_pos = sat_pos_getter.global_position
+	
 	if IN_ZONE:
 		gravity_scale = 0
 	else:
 		gravity_scale = 1
+		
 	#if Input.is_action_pressed('grap'):
 		#var mouse = get_global_mouse_position()
 		#var get_positions = (mouse - self.global_position)
@@ -42,12 +49,40 @@ func _physics_process(delta):
 		#var direction = get_positions.normalized()
 		#if distance > 600:
 			#apply_central_force((direction * 2000) * ( min((distance - 600), 300) / 10))
+	
+	if Input.is_action_just_pressed("platform"):
+		var summoned_ghost_platform = ghost_platform.instantiate()
+		get_parent().add_child(summoned_ghost_platform)
+		current_platform = summoned_ghost_platform
+		current_platform.position = sat_pos
+	if Input.is_action_pressed("platform"):
+		sat.IS_LOCKED = true
+		Engine.time_scale = lerp(Engine.time_scale, 0.1, 0.6)
+		if Input.is_action_pressed("aiming_left") or Input.is_action_pressed("aiming_right") or Input.is_action_pressed("aiming_up") or Input.is_action_pressed("aiming_down"):
+			var right_joystick_x = Input.get_joy_axis(0, JOY_AXIS_RIGHT_X)
+			var right_joystick_y = Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)
+			var joystick_direction = Vector2(right_joystick_x,right_joystick_y).normalized()
+			LAST_PLATFORM_ANGLE = joystick_direction.angle()
+			current_platform.rotation = joystick_direction.angle()
+			current_platform.position = sat_pos
+		if Input.is_action_just_released("aiming_left") or Input.is_action_just_released("aiming_right") or Input.is_action_just_released("aiming_up") or Input.is_action_just_released("aiming_down"):
+			current_platform.rotation = LAST_PLATFORM_ANGLE
+	else:
+		Engine.time_scale = lerp(Engine.time_scale, 1.0, 0.1)
+	if Input.is_action_just_released("platform"):
+		sat.IS_LOCKED = false
+		var summoned_platform = platform.instantiate()
+		summoned_platform.position = current_platform.global_position
+		summoned_platform.rotation = current_platform.rotation
+		current_platform.queue_free()
+		get_parent().add_child(summoned_platform)
+		
 	if Input.is_action_just_pressed('boom'):
 		var satelite_direction = Vector2.RIGHT.rotated(sat.rotation)
 		#var mouse_pos = get_global_mouse_position()
 		#var distance_from_mouse = (mouse_pos - self.global_position).length()
 		#if distance_from_mouse < 300 and distance_from_mouse > 30:
-		apply_central_impulse(satelite_direction * (600 ) * -1)
+		apply_central_impulse(satelite_direction * 600 * -1)
 	if not IS_CHARGING:
 		if IS_ON_ICE:
 			SPEED = SPEED / 2
@@ -101,6 +136,8 @@ func _physics_process(delta):
 		#ACCUMULATED_VELOCITY = 0.3
 		
 func _on_body_entered(body):
+	if body.is_in_group("repel"):
+		print("repel")
 	if body.is_in_group("ground"):
 		IS_IN_AIR = false
 	elif body.is_in_group("ice"):
@@ -121,3 +158,6 @@ func stop_motion():
 	gravity_scale = 0
 	linear_velocity = Vector2.ZERO
 	angular_velocity = 0.0
+	
+func restart():
+	get_tree().reload_current_scene()

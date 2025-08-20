@@ -2,3 +2,7 @@ res://main.tscn
 res://character_satellite.gd
 res://character_rigid.gd
 res://character.tscn
+res://summoned_platform.tscn
+res://counter_rotate.gd
+res://ghost_platform.tscn
+res://ghost_platform.gd

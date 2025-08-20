@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://bxjrm6ebk7dcl"]
+
+[ext_resource type="PhysicsMaterial" uid="uid://qte3gvvdl13r" path="res://phys_mat/bounce.tres" id="1_ch2j5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lb587"]
+size = Vector2(219.5, 15)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_gt3b2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ch2j5"]
+size = Vector2(220, 15)
+
+[node name="summoned_platform_node" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+physics_material_override = ExtResource("1_ch2j5")
+
+[node name="repel_col" type="CollisionShape2D" parent="StaticBody2D" groups=["repel"]]
+position = Vector2(0.25, -8)
+shape = SubResource("RectangleShape2D_lb587")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(3.8147e-06, 0)
+scale = Vector2(218, 28)
+texture = SubResource("CanvasTexture_gt3b2")
+
+[node name="regular_col" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, 7.5)
+shape = SubResource("RectangleShape2D_ch2j5")
