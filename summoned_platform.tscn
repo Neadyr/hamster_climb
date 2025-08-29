@@ -10,7 +10,7 @@ size = Vector2(219.5, 15)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ch2j5"]
 size = Vector2(220, 15)
 
-[node name="summoned_platform_node" type="Node2D"]
+[node name="summoned_platform_node" type="Node2D" groups=["platform", "repel"]]
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 physics_material_override = ExtResource("1_ch2j5")
