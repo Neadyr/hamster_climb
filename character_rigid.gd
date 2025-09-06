@@ -14,12 +14,16 @@ var ghost_platform = preload("res://ghost_platform.tscn")
 var current_platform
 var LAST_PLATFORM_ANGLE
 var BOOM_CHARGE = 1
-var CAN_BOOM = true
 var CAN_SUMMON = true
+
+var CAN_BOOM = true
+var BOOM_CD = 0.1
+var BOOM_LOCK = false
+var BOOM_CD_VALUE = 0
 @onready var sat = $"./counter_rotate/character_satelite"
 @onready var sat_pos_getter = $"./counter_rotate/character_satelite/satelite_sprite"
 
-# BUG => double boom, probably because of when i set the boom to false and the last collision
+
 # FEAT => summoned platform must be unavailable somehow from the ground
 
 
@@ -38,7 +42,14 @@ func _input(event):
 func _process(_delta):
 	if Input.is_action_just_pressed("reset"):
 		restart()
+		
 func _physics_process(delta):
+	if BOOM_CD_VALUE < BOOM_CD and BOOM_LOCK:
+		BOOM_CD_VALUE += delta
+		CAN_BOOM = false
+	else:
+		BOOM_LOCK = false
+
 	var sat_pos = sat_pos_getter.global_position
 	
 	if IN_ZONE:
@@ -62,29 +73,40 @@ func _physics_process(delta):
 	if Input.is_action_pressed("platform") and CAN_SUMMON:
 		sat.IS_LOCKED = true
 		Engine.time_scale = lerp(Engine.time_scale, 0.1, 0.6)
-		if Input.is_action_pressed("aiming_left") or Input.is_action_pressed("aiming_right") or Input.is_action_pressed("aiming_up") or Input.is_action_pressed("aiming_down"):
+		if Input.is_action_pressed("rightjoy_left") or Input.is_action_pressed("rightjoy_right") or Input.is_action_pressed("rightjoy_up") or Input.is_action_pressed("rightjoy_down"):
 			var right_joystick_x = Input.get_joy_axis(0, JOY_AXIS_RIGHT_X)
 			var right_joystick_y = Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)
 			var joystick_direction = Vector2(right_joystick_x,right_joystick_y).normalized()
 			LAST_PLATFORM_ANGLE = joystick_direction.angle()
 			current_platform.rotation = joystick_direction.angle()
-		if Input.is_action_just_released("aiming_left") or Input.is_action_just_released("aiming_right") or Input.is_action_just_released("aiming_up") or Input.is_action_just_released("aiming_down"):
+		if Input.is_action_pressed("leftjoy_left") or Input.is_action_pressed("leftjoy_right") or Input.is_action_pressed("leftjoy_up") or Input.is_action_pressed("leftjoy_down"):
+#			FIX platforme should no be able to be summoned to close to the player
+			
+			var left_joystick_x = Input.get_joy_axis(0, JOY_AXIS_LEFT_X)
+			var left_joystick_y = Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)
+			var joystick_direction = Vector2(left_joystick_x,left_joystick_y).normalized()
+			print(joystick_direction)
+			current_platform.position += joystick_direction * delta * 10000
+		if Input.is_action_just_released("rightjoy_left") or Input.is_action_just_released("rightjoy_right") or Input.is_action_just_released("rightjoy_up") or Input.is_action_just_released("rightjoy_down"):
 			current_platform.rotation = LAST_PLATFORM_ANGLE
-		current_platform.position = sat_pos
+		
 	else:
 		Engine.time_scale = lerp(Engine.time_scale, 1.0, 0.1)
 	if Input.is_action_just_released("platform") and CAN_SUMMON:
 		sat.IS_LOCKED = false
 		var summoned_platform = platform.instantiate()
-		summoned_platform.position = current_platform.global_position
-		summoned_platform.rotation = current_platform.rotation
+		if is_instance_valid(summoned_platform):
+			summoned_platform.position = current_platform.global_position
+			summoned_platform.rotation = current_platform.rotation
+		
 		current_platform.queue_free()
 		get_parent().add_child(summoned_platform)
 		CAN_SUMMON = false
-	if Input.is_action_pressed("boom") and CAN_BOOM:
+		
+	if Input.is_action_pressed("boom") and CAN_BOOM and BOOM_LOCK == false:
 		if BOOM_CHARGE < 3:
 			BOOM_CHARGE += delta
-	if Input.is_action_just_released('boom') and CAN_BOOM:
+	if Input.is_action_just_released('boom') and CAN_BOOM and BOOM_LOCK == false:
 		var satelite_direction = Vector2.RIGHT.rotated(sat.rotation)
 		#var mouse_pos = get_global_mouse_position()
 		#var distance_from_mouse = (mouse_pos - self.global_position).length()
@@ -92,27 +114,9 @@ func _physics_process(delta):
 		apply_central_impulse(satelite_direction * 600 * -1 * BOOM_CHARGE)
 		BOOM_CHARGE = 1
 		CAN_BOOM = false
-	if not IS_CHARGING:
-		if IS_ON_ICE:
-			SPEED = SPEED / 2
-		if Input.is_action_just_pressed('ui_right') or Input.is_action_just_pressed('ui_left'):
-			ACCELERATION = 2
-		if Input.is_action_pressed('ui_right'):
-			apply_central_force(Vector2(SPEED, 0))
-			ACCELERATION += delta
-			#apply_torque(TORQUE_POWER * ACCELERATION)
-			#print(TORQUE_POWER * ACCELERATION)
-		if Input.is_action_pressed('ui_left'):
-			#apply_torque(-TORQUE_POWER * ACCELERATION)
-			#print(TORQUE_POWER * ACCELERATION)
-			
-			apply_central_force(Vector2(-SPEED, 0))
-		if IN_ZONE:
-			if Input.is_action_pressed('ui_up'):
-				apply_central_force(Vector2(0, -SPEED))
-			if Input.is_action_pressed('ui_down'):
-				apply_central_force(Vector2(0, SPEED))
-		
+		BOOM_LOCK = true
+		BOOM_CD_VALUE = 0
+
 	#if Input.is_action_just_pressed("jump"):
 		#if not IS_IN_AIR:
 			#apply_central_impulse(Vector2(0, -500))
@@ -146,9 +150,10 @@ func _physics_process(delta):
 		
 func _on_body_entered(body):
 	if body.is_in_group("repel"):
-		print("repel")
+		print("RRRRREPEEEEL")
+		body.queue_free()
 	if body.is_in_group("ground"):
-		print("hello")
+		print("Poc, j'ai touché le sol")
 		IS_IN_AIR = false
 	elif body.is_in_group("ice"):
 		IS_ON_ICE = true
@@ -166,6 +171,8 @@ func _integrate_forces(state):
 			CAN_BOOM = true
 			CAN_SUMMON = true
 		if state.get_contact_collider_object(0).is_in_group("repel"):
+			var normal = state.get_contact_local_normal(0)
+			apply_central_impulse(normal * 600)
 			print("YEET")
 	
 func restart():

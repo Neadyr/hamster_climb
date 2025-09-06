@@ -53,6 +53,7 @@ position = Vector2(144.8, -0.2)
 shape = SubResource("CircleShape2D_px5sl")
 
 [node name="satelite_sprite" type="Sprite2D" parent="character_rb/counter_rotate/character_satelite"]
+visible = false
 position = Vector2(144.8, -0.2)
 scale = Vector2(0.05, 0.05)
 texture = ExtResource("2_pjt0s")

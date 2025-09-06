@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://o4qbxbbgsx84"]
+[gd_scene load_steps=24 format=3 uid="uid://o4qbxbbgsx84"]
 
 [ext_resource type="PackedScene" uid="uid://dfpk0ovptbsvh" path="res://character.tscn" id="1_ig7tw"]
 [ext_resource type="PhysicsMaterial" uid="uid://qte3gvvdl13r" path="res://phys_mat/bounce.tres" id="2_h2yge"]
@@ -7,8 +7,14 @@
 [ext_resource type="Texture2D" uid="uid://bh4kxd57b8lbj" path="res://Assets/Environment/Boulders/Boulder_02.png" id="5_7mycd"]
 [ext_resource type="Texture2D" uid="uid://b23byjww3r5k5" path="res://Assets/Environment/Boulders/Boulder_03.png" id="5_272bh"]
 [ext_resource type="Texture2D" uid="uid://dli2nbtxgrgb8" path="res://Assets/Environment/Boulders/Boulder_01.png" id="5_lquwl"]
+[ext_resource type="Texture2D" uid="uid://eho32rrfkv8o" path="res://Assets/Environment/Spatule.png" id="7_w48qg"]
 [ext_resource type="Texture2D" uid="uid://chuttwqhuqpfw" path="res://Assets/Environment/Trees/Tree_01.png" id="8_5vw27"]
 [ext_resource type="Texture2D" uid="uid://bxur1qt1tbn06" path="res://Assets/Environment/ice_slab.png" id="8_kek77"]
+[ext_resource type="Texture2D" uid="uid://prvxx3jkeeja" path="res://Assets/Environment/poele.png" id="11_vivmo"]
+[ext_resource type="Texture2D" uid="uid://belu13wqjyqmj" path="res://Assets/Environment/Passeoire.png" id="12_2cqfq"]
+[ext_resource type="Texture2D" uid="uid://dc2txcfqdcm3g" path="res://Assets/Environment/Louche.png" id="13_yaehf"]
+[ext_resource type="Texture2D" uid="uid://kbv5l1ivrnkd" path="res://Assets/Environment/Casserole.png" id="14_074og"]
+[ext_resource type="Texture2D" uid="uid://d271ep2ie1pmc" path="res://Assets/Environment/Cuillère.png" id="15_vivmo"]
 
 [sub_resource type="GDScript" id="GDScript_7dm0k"]
 script/source = "extends Node2D
@@ -198,6 +204,10 @@ position = Vector2(-230, -200)
 build_mode = 1
 polygon = PackedVector2Array(2, 1, 67, -31, 130, -60, 172, -63, 222, -59, 305, -41, 397, -16, 413, -3, 427, 11, 463, 63, 508, 139, 538, 202, 575, 304, 538, 444, 402, 490, -56, 489, -119, 381, -143, 334, -136, 266, -122, 187, -79, 130, -34, 59)
 
+[node name="Spatule" type="Sprite2D" parent="Bloulder_01"]
+position = Vector2(2770, -1135)
+texture = ExtResource("7_w48qg")
+
 [node name="ice_slab_01" type="StaticBody2D" parent="." groups=["ground", "ice"]]
 position = Vector2(3180, 152)
 physics_material_override = SubResource("PhysicsMaterial_4c57u")
@@ -225,3 +235,25 @@ polygon = PackedVector2Array(-123, 110, -106, 102, -89, 97, -72, 97, 178, 110, 3
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." groups=["ground"]]
 tile_set = SubResource("TileSet_7mycd")
+
+[node name="Poele" type="Sprite2D" parent="."]
+position = Vector2(7177, -1338)
+texture = ExtResource("11_vivmo")
+
+[node name="Passeoire" type="Sprite2D" parent="."]
+position = Vector2(5805, -1537)
+texture = ExtResource("12_2cqfq")
+
+[node name="Louche" type="Sprite2D" parent="."]
+position = Vector2(5613, -2460)
+rotation = -1.32641
+texture = ExtResource("13_yaehf")
+
+[node name="Casserole" type="Sprite2D" parent="."]
+position = Vector2(7258, -2403)
+texture = ExtResource("14_074og")
+
+[node name="Cuillère" type="Sprite2D" parent="."]
+position = Vector2(6547, -2887)
+rotation = -0.000330192
+texture = ExtResource("15_vivmo")
