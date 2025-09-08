@@ -10,16 +10,16 @@ specular_color = Color(0.337303, 1, 0.991766, 1)
 
 [node name="summoned_platform_node" type="Node2D"]
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
+[node name="ghost_body_2D" type="StaticBody2D" parent="."]
 physics_material_override = ExtResource("1_n4hdh")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ghost_body_2D"]
 position = Vector2(-0.5, 0)
 shape = SubResource("RectangleShape2D_lb587")
 disabled = true
 
-[node name="ghost_color" type="Sprite2D" parent="StaticBody2D"]
-modulate = Color(0.223529, 1, 1, 0.25098)
+[node name="ghost_color" type="Sprite2D" parent="ghost_body_2D"]
+modulate = Color(0.4177, 1, 0.856399, 0.25098)
 position = Vector2(3.8147e-06, 0)
 scale = Vector2(218, 28)
 texture = SubResource("CanvasTexture_gt3b2")

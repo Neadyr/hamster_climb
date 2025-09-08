@@ -1,17 +1,73 @@
-[gd_scene load_steps=3 format=3 uid="uid://bxjrm6ebk7dcl"]
+[gd_scene load_steps=9 format=3 uid="uid://bxjrm6ebk7dcl"]
 
 [ext_resource type="PhysicsMaterial" uid="uid://qte3gvvdl13r" path="res://phys_mat/bounce.tres" id="1_ch2j5"]
 [ext_resource type="Texture2D" uid="uid://m1i8hedccma1" path="res://Assets/summoned_platform.png" id="2_lb587"]
+[ext_resource type="Texture2D" uid="uid://053hnsba44od" path="res://Assets/Environment/pop_anim.png" id="3_gt3b2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2utbl"]
+atlas = ExtResource("3_gt3b2")
+region = Rect2(0, 0, 384, 778)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_50ndq"]
+atlas = ExtResource("3_gt3b2")
+region = Rect2(384, 0, 384, 778)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dg0j1"]
+atlas = ExtResource("3_gt3b2")
+region = Rect2(768, 0, 384, 778)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1xgtb"]
+atlas = ExtResource("3_gt3b2")
+region = Rect2(1152, 0, 384, 778)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8ci7q"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2utbl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_50ndq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dg0j1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1xgtb")
+}],
+"loop": false,
+"name": &"pop",
+"speed": 15.0
+}]
 
 [node name="summoned_platform_node" type="Node2D"]
 
-[node name="StaticBody2D" type="StaticBody2D" parent="." groups=["repel"]]
+[node name="bounce_part" type="StaticBody2D" parent="." groups=["repel"]]
 physics_material_override = ExtResource("1_ch2j5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+[node name="Sprite2D" type="Sprite2D" parent="bounce_part"]
 position = Vector2(1, -13)
 scale = Vector2(0.25, 0.15)
 texture = ExtResource("2_lb587")
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
-polygon = PackedVector2Array(-108, -9, -108, 14, 108, 14, 108, -8, 107, -10, 104.336, -11, 97, -11, 96, -15, 94, -18, 91, -21, 83, -24, 72, -26, 55, -28, 34, -29, 15, -29, 0, -29, -17, -29, -36, -29, -55, -28, -67, -27, -81, -25, -87, -23, -91, -21, -94, -18, -96, -14, -97, -11, -104, -11, -105.716, -10.6421, -107, -10)
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="bounce_part"]
+polygon = PackedVector2Array(97, -11, 96, -15, 94, -18, 91, -21, 83, -24, 72, -26, 55, -28, 34, -29, 15, -29, 0, -29, -17, -29, -36, -29, -55, -28, -67, -27, -81, -25, -87, -23, -91, -21, -94, -18, -96, -14, -97, -11)
+
+[node name="solid_part" type="StaticBody2D" parent="." groups=["platform_back"]]
+physics_material_override = ExtResource("1_ch2j5")
+
+[node name="Sprite2D" type="Sprite2D" parent="solid_part"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="solid_part"]
+polygon = PackedVector2Array(-105, -11, -107, -10, -108, -8, -108, 11.4402, -107, 13, -104.037, 14, 104.146, 14, 107, 13, 107.883, 11.1997, 107.988, -8.62887, 107, -10, 104, -11)
+
+[node name="pop_anim" type="AnimatedSprite2D" parent="."]
+position = Vector2(28, 81)
+sprite_frames = SubResource("SpriteFrames_8ci7q")
+animation = &"pop"
+frame_progress = 0.980547

@@ -11,11 +11,12 @@ var TORQUE_POWER = 50000
 var ACCELERATION = 2
 var platform = preload("res://summoned_platform.tscn")
 var ghost_platform = preload("res://ghost_platform.tscn")
-var current_platform
+var CURRENT_G_PLATFORM
+var CURRENT_SUMMONED_PLATFORM
 var LAST_PLATFORM_ANGLE
 var BOOM_CHARGE = 1
 var CAN_SUMMON = true
-
+var SUMMON_WAS_CANCELLED = false
 var CAN_BOOM = true
 var BOOM_CD = 0.1
 var BOOM_LOCK = false
@@ -57,19 +58,11 @@ func _physics_process(delta):
 	else:
 		gravity_scale = 1
 		
-	#if Input.is_action_pressed('grap'):
-		#var mouse = get_global_mouse_position()
-		#var get_positions = (mouse - self.global_position)
-		#var distance = get_positions.length()
-		#var direction = get_positions.normalized()
-		#if distance > 600:
-			#apply_central_force((direction * 2000) * ( min((distance - 600), 300) / 10))
-	
 	if Input.is_action_just_pressed("platform") and CAN_SUMMON:
 		var summoned_ghost_platform = ghost_platform.instantiate()
 		get_parent().add_child(summoned_ghost_platform)
-		current_platform = summoned_ghost_platform
-		current_platform.position = sat_pos
+		CURRENT_G_PLATFORM = summoned_ghost_platform
+		CURRENT_G_PLATFORM.position = sat_pos
 	if Input.is_action_pressed("platform") and CAN_SUMMON:
 		sat.IS_LOCKED = true
 		Engine.time_scale = lerp(Engine.time_scale, 0.1, 0.6)
@@ -77,40 +70,55 @@ func _physics_process(delta):
 			var right_joystick_x = Input.get_joy_axis(0, JOY_AXIS_RIGHT_X)
 			var right_joystick_y = Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)
 			var joystick_direction = Vector2(right_joystick_x,right_joystick_y).normalized()
-			LAST_PLATFORM_ANGLE = joystick_direction.angle()
-			current_platform.rotation = joystick_direction.angle()
+			LAST_PLATFORM_ANGLE = joystick_direction.angle() + PI/2
+			CURRENT_G_PLATFORM.rotation = joystick_direction.angle() + PI/2
 		if Input.is_action_pressed("leftjoy_left") or Input.is_action_pressed("leftjoy_right") or Input.is_action_pressed("leftjoy_up") or Input.is_action_pressed("leftjoy_down"):
-#			FIX platforme should no be able to be summoned to close to the player
 			
 			var left_joystick_x = Input.get_joy_axis(0, JOY_AXIS_LEFT_X)
 			var left_joystick_y = Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)
 			var joystick_direction = Vector2(left_joystick_x,left_joystick_y).normalized()
-			print(joystick_direction)
-			current_platform.position += joystick_direction * delta * 10000
+			
+			CURRENT_G_PLATFORM.position += joystick_direction * delta * 10000
+		var distance = (CURRENT_G_PLATFORM.position - self.position).length()
+		if (distance > 180):
+			CURRENT_G_PLATFORM.get_node("ghost_body_2D/ghost_color").modulate = Color.hex(0x6bffda40)
+		else:
+			CURRENT_G_PLATFORM.get_node("ghost_body_2D/ghost_color").modulate = Color.hex(0xfed3e640)
+				
 		if Input.is_action_just_released("rightjoy_left") or Input.is_action_just_released("rightjoy_right") or Input.is_action_just_released("rightjoy_up") or Input.is_action_just_released("rightjoy_down"):
-			current_platform.rotation = LAST_PLATFORM_ANGLE
-		
+			CURRENT_G_PLATFORM.rotation = LAST_PLATFORM_ANGLE
+		if Input.is_action_just_pressed("cancel_summon"):
+			Input.action_release("platform")
+			CURRENT_G_PLATFORM.queue_free()
+			SUMMON_WAS_CANCELLED = true
+			sat.IS_LOCKED = false
+			
 	else:
 		Engine.time_scale = lerp(Engine.time_scale, 1.0, 0.1)
 	if Input.is_action_just_released("platform") and CAN_SUMMON:
-		sat.IS_LOCKED = false
-		var summoned_platform = platform.instantiate()
-		if is_instance_valid(summoned_platform):
-			summoned_platform.position = current_platform.global_position
-			summoned_platform.rotation = current_platform.rotation
-		
-		current_platform.queue_free()
-		get_parent().add_child(summoned_platform)
-		CAN_SUMMON = false
+		if not SUMMON_WAS_CANCELLED:
+			sat.IS_LOCKED = false
+			var distance = (CURRENT_G_PLATFORM.position - self.position).length()
+			if (distance > 180): # Should detect a collision instead of plain distance, feels weird
+				if CURRENT_SUMMONED_PLATFORM:
+					CURRENT_SUMMONED_PLATFORM.queue_free()
+				var summoned_platform = platform.instantiate()
+				CURRENT_SUMMONED_PLATFORM = summoned_platform
+				summoned_platform.position = CURRENT_G_PLATFORM.global_position
+				summoned_platform.rotation = CURRENT_G_PLATFORM.rotation
+				CURRENT_G_PLATFORM.queue_free()
+				get_parent().add_child(summoned_platform)
+				CAN_SUMMON = false
+			else:
+				CURRENT_G_PLATFORM.queue_free()
+		else:
+			SUMMON_WAS_CANCELLED = false
 		
 	if Input.is_action_pressed("boom") and CAN_BOOM and BOOM_LOCK == false:
 		if BOOM_CHARGE < 3:
 			BOOM_CHARGE += delta
 	if Input.is_action_just_released('boom') and CAN_BOOM and BOOM_LOCK == false:
 		var satelite_direction = Vector2.RIGHT.rotated(sat.rotation)
-		#var mouse_pos = get_global_mouse_position()
-		#var distance_from_mouse = (mouse_pos - self.global_position).length()
-		#if distance_from_mouse < 300 and distance_from_mouse > 30:
 		apply_central_impulse(satelite_direction * 600 * -1 * BOOM_CHARGE)
 		BOOM_CHARGE = 1
 		CAN_BOOM = false
@@ -149,9 +157,12 @@ func _physics_process(delta):
 		#ACCUMULATED_VELOCITY = 0.3
 		
 func _on_body_entered(body):
-	if body.is_in_group("repel"):
+	if body.is_in_group("repel") or body.is_in_group("platform_back"):
 		print("RRRRREPEEEEL")
-		body.queue_free()
+		var anim_node = body.get_parent().get_node("pop_anim")
+		anim_node.play("pop")
+		await anim_node.animation_finished
+		body.get_parent().queue_free()
 	if body.is_in_group("ground"):
 		print("Poc, j'ai touché le sol")
 		IS_IN_AIR = false

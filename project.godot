@@ -23,6 +23,7 @@ window/size/viewport_height=1080
 [global_group]
 
 repel="replling platform"
+platform_back="back of a summoned platform"
 
 [input]
 
@@ -145,5 +146,10 @@ leftjoy_up={
 leftjoy_down={
 "deadzone": 0.2,
 "events": [Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":-1,"axis":1,"axis_value":1.0,"script":null)
+]
+}
+cancel_summon={
+"deadzone": 0.2,
+"events": [Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":-1,"axis":5,"axis_value":1.0,"script":null)
 ]
 }
