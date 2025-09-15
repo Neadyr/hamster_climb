@@ -14,13 +14,14 @@ var ghost_platform = preload("res://ghost_platform.tscn")
 var CURRENT_G_PLATFORM
 var CURRENT_SUMMONED_PLATFORM
 var LAST_PLATFORM_ANGLE
-var BOOM_CHARGE = 1
+var BOOM_CHARGE = 0
 var CAN_SUMMON = true
 var SUMMON_WAS_CANCELLED = false
 var CAN_BOOM = true
 var BOOM_CD = 0.1
 var BOOM_LOCK = false
 var BOOM_CD_VALUE = 0
+var BOOM_WAS_CANCELLED = false
 @onready var sat = $"./counter_rotate/character_satelite"
 @onready var sat_pos_getter = $"./counter_rotate/character_satelite/satelite_sprite"
 
@@ -66,28 +67,33 @@ func _physics_process(delta):
 	if Input.is_action_pressed("platform") and CAN_SUMMON:
 		sat.IS_LOCKED = true
 		Engine.time_scale = lerp(Engine.time_scale, 0.1, 0.6)
-		if Input.is_action_pressed("rightjoy_left") or Input.is_action_pressed("rightjoy_right") or Input.is_action_pressed("rightjoy_up") or Input.is_action_pressed("rightjoy_down"):
-			var right_joystick_x = Input.get_joy_axis(0, JOY_AXIS_RIGHT_X)
-			var right_joystick_y = Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)
-			var joystick_direction = Vector2(right_joystick_x,right_joystick_y).normalized()
-			LAST_PLATFORM_ANGLE = joystick_direction.angle() + PI/2
-			CURRENT_G_PLATFORM.rotation = joystick_direction.angle() + PI/2
-		if Input.is_action_pressed("leftjoy_left") or Input.is_action_pressed("leftjoy_right") or Input.is_action_pressed("leftjoy_up") or Input.is_action_pressed("leftjoy_down"):
-			
-			var left_joystick_x = Input.get_joy_axis(0, JOY_AXIS_LEFT_X)
-			var left_joystick_y = Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)
-			var joystick_direction = Vector2(left_joystick_x,left_joystick_y).normalized()
-			
-			CURRENT_G_PLATFORM.position += joystick_direction * delta * 10000
-		var distance = (CURRENT_G_PLATFORM.position - self.position).length()
-		if (distance > 180):
-			CURRENT_G_PLATFORM.get_node("ghost_body_2D/ghost_color").modulate = Color.hex(0x6bffda40)
+		if not Input.is_action_pressed("rotate_platform"):
+			if Input.is_action_pressed("leftjoy_left") or Input.is_action_pressed("leftjoy_right") or Input.is_action_pressed("leftjoy_up") or Input.is_action_pressed("leftjoy_down"):
+				
+				var left_joystick_x = Input.get_joy_axis(0, JOY_AXIS_LEFT_X)
+				var left_joystick_y = Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)
+				var joystick_direction = Vector2(left_joystick_x,left_joystick_y).normalized()
+				
+				CURRENT_G_PLATFORM.position += joystick_direction * delta * 10000
 		else:
-			CURRENT_G_PLATFORM.get_node("ghost_body_2D/ghost_color").modulate = Color.hex(0xfed3e640)
+			
+			if Input.is_action_pressed("leftjoy_left") or Input.is_action_pressed("leftjoy_right") or Input.is_action_pressed("leftjoy_up") or Input.is_action_pressed("leftjoy_down"):
+				var left_joystick_x = Input.get_joy_axis(0, JOY_AXIS_LEFT_X)
+				var left_joystick_y = Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)
+				var joystick_direction = Vector2(left_joystick_x,left_joystick_y).normalized()
+				LAST_PLATFORM_ANGLE = joystick_direction.angle() + PI/2
+				CURRENT_G_PLATFORM.rotation = joystick_direction.angle() + PI/2
+		
+		var distance = (CURRENT_G_PLATFORM.position - self.position).length()
+		print("overlapping ?", CURRENT_G_PLATFORM.is_overlapping)
+		if not (CURRENT_G_PLATFORM.is_overlapping):
+			CURRENT_G_PLATFORM.get_node("contact_sensor/ghost_color").modulate = Color.hex(0x6bffda40)
+		else:
+			CURRENT_G_PLATFORM.get_node("contact_sensor/ghost_color").modulate = Color.hex(0xfed3e640)
 				
 		if Input.is_action_just_released("rightjoy_left") or Input.is_action_just_released("rightjoy_right") or Input.is_action_just_released("rightjoy_up") or Input.is_action_just_released("rightjoy_down"):
 			CURRENT_G_PLATFORM.rotation = LAST_PLATFORM_ANGLE
-		if Input.is_action_just_pressed("cancel_summon"):
+		if Input.is_action_just_pressed("cancel"):
 			Input.action_release("platform")
 			CURRENT_G_PLATFORM.queue_free()
 			SUMMON_WAS_CANCELLED = true
@@ -99,7 +105,7 @@ func _physics_process(delta):
 		if not SUMMON_WAS_CANCELLED:
 			sat.IS_LOCKED = false
 			var distance = (CURRENT_G_PLATFORM.position - self.position).length()
-			if (distance > 180): # Should detect a collision instead of plain distance, feels weird
+			if not (CURRENT_G_PLATFORM.is_overlapping): # Should detect a collision instead of plain distance, feels weird
 				if CURRENT_SUMMONED_PLATFORM:
 					CURRENT_SUMMONED_PLATFORM.queue_free()
 				var summoned_platform = platform.instantiate()
@@ -117,13 +123,21 @@ func _physics_process(delta):
 	if Input.is_action_pressed("boom") and CAN_BOOM and BOOM_LOCK == false:
 		if BOOM_CHARGE < 3:
 			BOOM_CHARGE += delta
+			print(BOOM_CHARGE)
+		if Input.is_action_just_pressed("cancel"):
+			Input.action_release("boom")
+			BOOM_WAS_CANCELLED = true
+			BOOM_CHARGE = 0
 	if Input.is_action_just_released('boom') and CAN_BOOM and BOOM_LOCK == false:
-		var satelite_direction = Vector2.RIGHT.rotated(sat.rotation)
-		apply_central_impulse(satelite_direction * 600 * -1 * BOOM_CHARGE)
-		BOOM_CHARGE = 1
-		CAN_BOOM = false
-		BOOM_LOCK = true
-		BOOM_CD_VALUE = 0
+		if not BOOM_WAS_CANCELLED:
+			var satelite_direction = Vector2.RIGHT.rotated(sat.rotation)
+			apply_central_impulse(satelite_direction * 600 * -1 * BOOM_CHARGE)
+			BOOM_CHARGE = 0
+			CAN_BOOM = false
+			BOOM_LOCK = true
+			BOOM_CD_VALUE = 0
+		else:
+			BOOM_WAS_CANCELLED = false
 
 	#if Input.is_action_just_pressed("jump"):
 		#if not IS_IN_AIR:

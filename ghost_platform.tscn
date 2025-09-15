@@ -1,25 +1,24 @@
 [gd_scene load_steps=4 format=3 uid="uid://dqmsn5hqn2oc7"]
 
-[ext_resource type="PhysicsMaterial" uid="uid://qte3gvvdl13r" path="res://phys_mat/bounce.tres" id="1_n4hdh"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_lb587"]
-size = Vector2(219, 28)
+[ext_resource type="Script" uid="uid://dlub2u114qw5x" path="res://ghost_platform_node.gd" id="1_gmvri"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_gt3b2"]
 specular_color = Color(0.337303, 1, 0.991766, 1)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lb587"]
+size = Vector2(219, 28)
+
 [node name="summoned_platform_node" type="Node2D"]
+script = ExtResource("1_gmvri")
 
-[node name="ghost_body_2D" type="StaticBody2D" parent="."]
-physics_material_override = ExtResource("1_n4hdh")
+[node name="contact_sensor" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ghost_body_2D"]
-position = Vector2(-0.5, 0)
-shape = SubResource("RectangleShape2D_lb587")
-disabled = true
-
-[node name="ghost_color" type="Sprite2D" parent="ghost_body_2D"]
+[node name="ghost_color" type="Sprite2D" parent="contact_sensor"]
 modulate = Color(0.4177, 1, 0.856399, 0.25098)
 position = Vector2(3.8147e-06, 0)
 scale = Vector2(218, 28)
 texture = SubResource("CanvasTexture_gt3b2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="contact_sensor"]
+position = Vector2(-0.5, 0)
+shape = SubResource("RectangleShape2D_lb587")

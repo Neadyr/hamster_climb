@@ -1,6 +1,8 @@
-res://summoned_platform.tscn
-res://main.tscn
-res://character.tscn
 res://ghost_platform.tscn
+res://ghost_platform.gd
+res://main.tscn
 res://character_rigid.gd
-res://character_satellite.gd
+res://character.tscn
+res://summoned_platform.tscn
+res://menu.tscn
+res://ghost_platform_node.gd
